@@ -144,3 +144,146 @@ CREATE POLICY "Users can view own transactions"
 CREATE POLICY "Users can manage own priyo numbers"
   ON public.priyo_numbers FOR ALL
   USING (auth.uid() = user_id);
+
+
+
+--disable RLS to drop policies
+ALTER TABLE public."Profiles" DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.wallets DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.transactions DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.priyo_numbers DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.otps DISABLE ROW LEVEL SECURITY;
+
+
+
+
+-- ============================================
+-- DROP ALL EXISTING POLICIES
+-- ============================================
+DROP POLICY IF EXISTS "service_role_profiles" ON public."Profiles";
+DROP POLICY IF EXISTS "service_role_wallets" ON public.wallets;
+DROP POLICY IF EXISTS "service_role_transactions" ON public.transactions;
+DROP POLICY IF EXISTS "service_role_priyo" ON public.priyo_numbers;
+DROP POLICY IF EXISTS "service_role_otps" ON public.otps;
+DROP POLICY IF EXISTS "Users can view own wallet" ON public.wallets;
+DROP POLICY IF EXISTS "Users can view own transactions" ON public.transactions;
+DROP POLICY IF EXISTS "Users can view own profile" ON public."Profiles";
+DROP POLICY IF EXISTS "Users can update own profile" ON public."Profiles";
+DROP POLICY IF EXISTS "Users can manage own priyo numbers" ON public.priyo_numbers;
+-- ============================================
+-- REMOVE SERVICE ROLE POLICIES
+-- ============================================
+DROP POLICY IF EXISTS "profiles_service_role" ON public."Profiles";
+DROP POLICY IF EXISTS "wallets_service_role" ON public.wallets;
+DROP POLICY IF EXISTS "transactions_service_role" ON public.transactions;
+DROP POLICY IF EXISTS "priyo_service_role" ON public.priyo_numbers;
+DROP POLICY IF EXISTS "otps_service_role" ON public.otps;
+
+-- ============================================
+-- REMOVE USER-LEVEL (AUTHENTICATED) POLICIES
+-- ============================================
+DROP POLICY IF EXISTS "profiles_own_row" ON public."Profiles";
+DROP POLICY IF EXISTS "wallets_own_row" ON public.wallets;
+DROP POLICY IF EXISTS "transactions_own_rows" ON public.transactions;
+DROP POLICY IF EXISTS "priyo_own_rows" ON public.priyo_numbers;
+DROP POLICY IF EXISTS "otps_own_rows" ON public.otps;
+
+-- ============================================
+-- PROFILES
+-- User can do anything on their own row only
+-- ============================================
+CREATE POLICY "profiles_service_role"
+ON public."Profiles"
+AS PERMISSIVE FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "profiles_own_row"
+ON public."Profiles"
+AS PERMISSIVE FOR ALL
+TO authenticated
+USING (auth.uid() = id)
+WITH CHECK (auth.uid() = id);
+
+-- ============================================
+-- WALLETS
+-- User can read + update only their own wallet
+-- ============================================
+CREATE POLICY "wallets_service_role"
+ON public.wallets
+AS PERMISSIVE FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "wallets_own_row"
+ON public.wallets
+AS PERMISSIVE FOR ALL
+TO authenticated
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- ============================================
+-- TRANSACTIONS
+-- User can view transactions where they are sender OR receiver
+-- User cannot insert directly — only service_role (backend) inserts
+-- ============================================
+CREATE POLICY "transactions_service_role"
+ON public.transactions
+AS PERMISSIVE FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "transactions_own_rows"
+ON public.transactions
+AS PERMISSIVE FOR ALL
+TO authenticated
+USING (
+  auth.uid() = from_user_id OR
+  auth.uid() = to_user_id
+);
+
+-- ============================================
+-- PRIYO NUMBERS
+-- User can do anything on rows where user_id = their id
+-- Cannot touch other users priyo lists
+-- ============================================
+CREATE POLICY "priyo_service_role"
+ON public.priyo_numbers
+AS PERMISSIVE FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "priyo_own_rows"
+ON public.priyo_numbers
+AS PERMISSIVE FOR ALL
+TO authenticated
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- ============================================
+-- OTPS
+-- User can only see their own OTPs by email
+-- Only service_role can insert/update OTPs
+-- ============================================
+CREATE POLICY "otps_service_role"
+ON public.otps
+AS PERMISSIVE FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "otps_own_rows"
+ON public.otps
+AS PERMISSIVE FOR SELECT
+TO authenticated
+USING (
+  email = (
+    SELECT email FROM public."Profiles"
+    WHERE id = auth.uid()
+  )
+);
+
