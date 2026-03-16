@@ -1,6 +1,6 @@
 // server/repositories/otp.repository.js
 
-import { supabaseAdmin } from '../config/supabase.js'; // ✅ changed
+import { supabase, supabaseAdmin } from '../config/supabase.js'; // ✅ changed
 
 class OtpRepository {
 

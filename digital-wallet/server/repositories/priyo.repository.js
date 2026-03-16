@@ -6,7 +6,7 @@
   Add, remove, list priyo contacts.
 */
 
-import { supabaseAdmin } from '../config/supabase.js';
+import { supabase, supabaseAdmin } from '../config/supabase.js';
 
 class PriyoRepository {
 

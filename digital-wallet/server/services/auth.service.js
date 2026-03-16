@@ -13,7 +13,7 @@
   resetPassword() → verifies OTP → updates password
 */// server/services/auth.service.js
 
-import { supabaseAdmin } from '../config/supabase.js';
+import { supabase, supabaseAdmin } from '../config/supabase.js';
 import userRepository from '../repositories/user.repository.js';
 import walletRepository from '../repositories/wallet.repository.js';
 import otpRepository from '../repositories/otp.repository.js';

@@ -7,7 +7,7 @@
   The Service layer will call these methods.
 */
 
-import { supabase, supabaseAdmin } from '../config/supabase.js';
+import {supabase,supabaseAdmin} from '../config/supabase.js';
 
 class UserRepository {
 

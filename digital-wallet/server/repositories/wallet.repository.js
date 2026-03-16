@@ -7,7 +7,7 @@
   The WalletService will call these — never controllers directly.
 */
 
-import { supabaseAdmin } from '../config/supabase.js';
+import { supabase, supabaseAdmin } from '../config/supabase.js';
 
 class WalletRepository {
 

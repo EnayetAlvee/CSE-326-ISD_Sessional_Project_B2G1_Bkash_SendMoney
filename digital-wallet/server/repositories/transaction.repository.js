@@ -6,7 +6,7 @@
   Recording transactions and reading history live here.
 */
 
-import { supabaseAdmin } from '../config/supabase.js';
+import { supabase, supabaseAdmin } from '../config/supabase.js';
 
 class TransactionRepository {
 
