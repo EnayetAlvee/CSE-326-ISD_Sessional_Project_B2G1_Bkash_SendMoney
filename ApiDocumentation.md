@@ -1,5 +1,6 @@
-# Bkash Project — Backend API Documentation          -- Enayet Alvee  
-
+# Bkash Project — Backend API Documentation          
+Author: Enayet Alvee
+B2G1 Bkash{Send Money}
 ---
 ## Overview
 
