@@ -4,13 +4,13 @@ A modern React-based frontend application for a mobile payment system similar to
 
 ## Features
 
-### 🔐 Authentication
+###  Authentication
 - Phone number-based login
 - OTP verification with resend functionality
 - Secure session management
 - Auto-logout on token expiry
 
-### 💰 Send Money Module
+###  Send Money Module
 - Phone number validation
 - Receiver verification
 - Amount input with fee calculation
@@ -18,13 +18,13 @@ A modern React-based frontend application for a mobile payment system similar to
 - Transaction confirmation
 - Real-time balance updates
 
-### 📱 Mobile-First Design
+###  Mobile-First Design
 - Responsive design optimized for mobile devices
 - bKash brand colors and styling
 - Smooth transitions and animations
 - Touch-friendly interface
 
-### 🛡️ Security Features
+###  Security Features
 - PIN masking
 - Secure API communication
 - Session timeout handling
@@ -174,10 +174,6 @@ npm test
 4. Write meaningful commit messages
 5. Test on multiple devices/browsers
 
-## License
 
-This project is for educational purposes. All rights reserved.
 
----
 
-**Note**: This is a frontend-only implementation. You'll need to implement the corresponding backend API endpoints for full functionality.
