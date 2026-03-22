@@ -1,9 +1,9 @@
 // server/services/sendmoney.service.js
 
-import walletRepository from '../repositories/wallet.repository.js';
-import transactionRepository from '../repositories/transaction.repository.js';
-import priyoRepository from '../repositories/priyo.repository.js';
-import userRepository from '../repositories/user.repository.js';
+import walletRepository from '../repositories/wallet_repository.js';
+import transactionRepository from '../repositories/transaction_repository.js';
+import priyoRepository from '../repositories/priyo_repository.js';
+import userRepository from '../repositories/user_repository.js';
 
 const PRIYO_FREE_LIMIT = 25000;   // free up to 25,000 BDT/month for priyo
 const CHARGE_AMOUNT = 5;          // 5 BDT charge

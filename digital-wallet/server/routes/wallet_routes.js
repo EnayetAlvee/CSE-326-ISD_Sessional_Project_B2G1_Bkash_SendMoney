@@ -1,10 +1,10 @@
 // server/routes/wallet.routes.js
 
 import { Router } from 'express';
-import walletController from '../controllers/wallet.controller.js';
-import sendMoneyController from '../controllers/sendmoney.controller.js';
-import transactionController from '../controllers/transaction.controller.js';
-import authMiddleware from '../middleware/auth.middleware.js';
+import walletController from '../controllers/wallet_controller.js';
+import sendMoneyController from '../controllers/sendmoney_controller.js';
+import transactionController from '../controllers/transaction_controller.js';
+import authMiddleware from '../middleware/auth_middleware.js';
 
 const router = Router();
 

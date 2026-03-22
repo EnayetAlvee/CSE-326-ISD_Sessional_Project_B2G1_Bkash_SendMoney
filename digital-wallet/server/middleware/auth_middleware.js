@@ -11,7 +11,7 @@
 */
 
 import { verifyToken } from '../utils/jwt.js';
-import userRepository from '../repositories/user.repository.js';
+import userRepository from '../repositories/user_repository.js';
 
 const authMiddleware = async (req, res, next) => {
   try {

@@ -14,9 +14,9 @@
 */// server/services/auth.service.js
 
 import { supabase, supabaseAdmin } from '../config/supabase.js';
-import userRepository from '../repositories/user.repository.js';
-import walletRepository from '../repositories/wallet.repository.js';
-import otpRepository from '../repositories/otp.repository.js';
+import userRepository from '../repositories/user_repository.js';
+import walletRepository from '../repositories/wallet_repository.js';
+import otpRepository from '../repositories/otp_repository.js';
 import { generateOtp } from '../utils/otp.js';
 import { generateToken } from '../utils/jwt.js';
 import { sendOtpEmail } from '../utils/email.js';

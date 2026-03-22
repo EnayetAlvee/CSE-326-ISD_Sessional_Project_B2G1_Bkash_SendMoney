@@ -7,7 +7,7 @@
   Pattern: get input → call service → send response
 */
 
-import authService from '../services/auth.service.js';
+import authService from '../services/auth_service.js';
 
 class AuthController {
 

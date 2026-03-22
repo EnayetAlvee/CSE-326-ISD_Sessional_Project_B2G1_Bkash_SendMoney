@@ -1,8 +1,8 @@
 // server/routes/priyo.routes.js
 
 import { Router } from 'express';
-import priyoController from '../controllers/priyo.controller.js';
-import authMiddleware from '../middleware/auth.middleware.js';
+import priyoController from '../controllers/priyo_controller.js';
+import authMiddleware from '../middleware/auth_middleware.js';
 
 const router = Router();
 

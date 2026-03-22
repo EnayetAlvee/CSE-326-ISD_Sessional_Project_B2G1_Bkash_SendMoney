@@ -4,10 +4,10 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { supabase } from './config/supabase.js';
 import config from './config/index.js';
-import authRoutes from './routes/auth.routes.js';
-import walletRoutes from './routes/wallet.routes.js';
-import priyoRoutes from './routes/priyo.routes.js';
-import profileRoutes from './routes/profile.routes.js';
+import authRoutes from './routes/auth_routes.js';
+import walletRoutes from './routes/wallet_routes.js';
+import priyoRoutes from './routes/priyo_routes.js';
+import profileRoutes from './routes/profile_routes.js';
 
 
 const app = express();   //Initializes the app instance.

@@ -1,6 +1,6 @@
 // server/controllers/profile.controller.js
 
-import userRepository from '../repositories/user.repository.js';
+import userRepository from '../repositories/user_repository.js';
 
 class ProfileController {
 

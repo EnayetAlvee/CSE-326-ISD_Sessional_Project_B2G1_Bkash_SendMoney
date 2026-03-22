@@ -1,8 +1,8 @@
 // server/routes/profile.routes.js
 
 import { Router } from 'express';
-import profileController from '../controllers/profile.controller.js';
-import authMiddleware from '../middleware/auth.middleware.js';
+import profileController from '../controllers/profile_controller.js';
+import authMiddleware from '../middleware/auth_middleware.js';
 
 const router = Router();
 

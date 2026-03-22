@@ -1,6 +1,6 @@
 // server/controllers/priyo.controller.js
 
-import priyoService from '../services/priyo.service.js';
+import priyoService from '../services/priyo_service.js';
 
 class PriyoController {
 

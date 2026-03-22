@@ -1,7 +1,7 @@
 // server/services/priyo.service.js
 
-import priyoRepository from '../repositories/priyo.repository.js';
-import userRepository from '../repositories/user.repository.js';
+import priyoRepository from '../repositories/priyo_repository.js';
+import userRepository from '../repositories/user_repository.js';
 
 const MAX_PRIYO = 5;
 

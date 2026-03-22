@@ -1,6 +1,6 @@
 // server/controllers/transaction.controller.js
 
-import transactionRepository from '../repositories/transaction.repository.js';
+import transactionRepository from '../repositories/transaction_repository.js';
 
 class TransactionController {
 

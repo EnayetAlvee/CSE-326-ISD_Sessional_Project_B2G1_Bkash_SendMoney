@@ -1,7 +1,7 @@
 // server/services/wallet.service.js
 
-import walletRepository from '../repositories/wallet.repository.js';
-import transactionRepository from '../repositories/transaction.repository.js';
+import walletRepository from '../repositories/wallet_repository.js';
+import transactionRepository from '../repositories/transaction_repository.js';
 
 class WalletService {
 

@@ -1,6 +1,6 @@
 // server/controllers/sendmoney.controller.js
 
-import sendMoneyService from '../services/sendmoney.service.js';
+import sendMoneyService from '../services/sendmoney_service.js';
 
 class SendMoneyController {
 

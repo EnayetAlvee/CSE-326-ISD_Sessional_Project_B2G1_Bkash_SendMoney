@@ -1,6 +1,6 @@
 // server/controllers/wallet.controller.js
 
-import walletService from '../services/wallet.service.js';
+import walletService from '../services/wallet_service.js';
 
 class WalletController {
 
