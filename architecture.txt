@@ -1,0 +1,368 @@
+
+
+# 📄 FINTECH PAYMENT SYSTEM
+
+**System Architecture Document**
+Mobile Financial Service — bKash-like Platform
+Academic Sessional — System Design at Scale
+
+---
+
+## 1. System Overview
+
+This document describes the system architecture for a mobile financial service (MFS) platform implementing:
+
+* OTP-based login
+* Wallet balance check
+* Peer-to-peer money transfer
+
+Equivalent to a subset of bKash.
+
+**Tech Stack:**
+
+* Backend: Node.js + Express
+* Frontend: React.js
+* Database: PostgreSQL
+* Cache: Redis
+* Queue: RabbitMQ
+
+**Services:**
+
+* Account Service
+* Wallet & Transaction Service
+* OTP (Notification) Service
+* API Gateway
+
+---
+
+## 2. Service Architecture
+
+### 2.1 Account Service (Auth)
+
+Handles:
+
+* User registration & profile
+* JWT token issuance
+* Favourite contacts
+* Account status
+
+Why separate:
+
+* Different scaling than transactions
+* Security isolation
+* Compliance separation
+
+Why NOT separate auth:
+
+* Only one app uses it
+* Too small to justify microservice
+
+---
+
+### 2.2 Wallet & Transaction Service
+
+Handles:
+
+* Wallet balance
+* Send money
+* Transactions
+* External payments
+
+Important:
+
+* Wallet + transaction are **NOT split**
+  👉 Because they need **atomic DB transactions**
+
+---
+
+### 2.3 Notification (OTP) Service
+
+Handles:
+
+* OTP generation
+* Redis storage (TTL 5 min)
+* SMS via RabbitMQ
+
+Features:
+
+* Rate limiting
+* Retry logic
+* Independent failure handling
+
+---
+
+### 2.4 API Gateway (Nginx)
+
+Handles:
+
+* Routing
+* Rate limiting
+* SSL termination
+* Load balancing
+
+---
+
+## 3. Database Architecture
+
+### 3.1 PostgreSQL Design
+
+Single instance, multiple schemas:
+
+| Schema         | Owner           |
+| -------------- | --------------- |
+| account_db     | Account Service |
+| wallet_db      | Wallet Service  |
+| operational_db | Shared          |
+
+---
+
+### 3.2 Tables
+
+#### account_db.users
+
+* id (UUID)
+* phone
+* name
+* pin_hash
+* status
+* timestamps
+
+---
+
+#### wallet_db.wallets
+
+* id
+* user_id
+* phone (denormalized)
+* balance
+* wallet_type
+* status
+
+---
+
+#### wallet_db.transactions
+
+* sender_wallet_id
+* receiver_wallet_id
+* amount
+* txn_type
+* status
+* idempotency_key
+* metadata
+
+---
+
+#### wallet_db.audit_logs
+
+* event_type
+* actor_id
+* metadata
+* NEVER deleted
+
+---
+
+### 3.3 Rules
+
+* ❌ No cross-schema foreign keys
+* ❌ No direct access between services
+* ✅ Use APIs or denormalization
+
+---
+
+## 4. Redis Usage
+
+| Key            | Purpose            |
+| -------------- | ------------------ |
+| otp:{phone}    | OTP storage        |
+| otp_requests   | Rate limit         |
+| refresh tokens | Session management |
+| rate:{ip}      | API rate limiting  |
+
+---
+
+## 5. RabbitMQ
+
+Used for:
+
+* OTP sending
+* SMS delivery
+
+Features:
+
+* Retry (5s → 15s → 45s)
+* Dead letter queue
+
+---
+
+## 6. Security Architecture
+
+### Layers:
+
+* HTTPS (TLS)
+* JWT + Refresh tokens
+* OTP protection
+* Rate limiting
+* Input validation
+* DB constraints
+
+---
+
+### Important Security Features:
+
+* SELECT FOR UPDATE (prevents race condition)
+* Idempotency keys
+* Balance ≥ 0 constraint
+* Atomic DB transactions
+
+---
+
+## 7. Logging Strategy
+
+### 7.1 Audit Logs
+
+* Stored in DB
+* Never deleted
+* Financial compliance
+
+Events:
+
+* USER_REGISTERED
+* OTP_REQUESTED
+* TRANSFER_COMPLETED
+* ACCOUNT_SUSPENDED
+
+(Shown in table on page 9 )
+
+---
+
+### 7.2 Operational Logs
+
+* Async
+* Deleted after 30 days
+* Used for debugging
+
+---
+
+### What NOT to log:
+
+* OTP codes
+* JWT tokens
+* Passwords
+* Full balances
+
+---
+
+## 8. Deployment Architecture
+
+### Docker Setup:
+
+Services:
+
+* nginx
+* account-service
+* wallet-service
+* otp-service
+* otp-worker
+* postgres
+* redis
+* rabbitmq
+* frontend
+
+---
+
+### Production (Single VPS)
+
+* 4 vCPU, 8GB RAM
+* Docker Compose
+* Nginx reverse proxy
+
+---
+
+### Scaling Path:
+
+* Horizontal scaling
+* DB read replica
+* Redis cluster
+* Kubernetes (only if needed)
+
+---
+
+## 9. Network Components
+
+| Component      | Tool       |
+| -------------- | ---------- |
+| API Gateway    | Nginx      |
+| CDN            | Cloudflare |
+| Message Broker | RabbitMQ   |
+
+---
+
+### Cloudflare:
+
+* CDN caching
+* DDoS protection
+* DNS
+
+---
+
+## 10. Observability
+
+Tools:
+
+* UptimeRobot → availability
+* Sentry → errors
+* Prometheus + Grafana → metrics
+* Netdata → real-time monitoring
+
+---
+
+## 11. Capacity & Load
+
+### Single VPS:
+
+* OTP: ~200 req/sec
+* Login: ~500 req/sec
+* Balance: ~800 req/sec
+* Send money: ~150 req/sec
+
+👉 Supports **50k–100k users**
+
+---
+
+### Scaled System:
+
+* Send money: ~450 req/sec
+* Balance: ~3000 req/sec
+* Login: ~1500 req/sec
+
+👉 Supports ~500k users
+
+---
+
+## ⚠️ Key Bottleneck
+
+* PostgreSQL write (send money)
+* Because of **ACID + locking**
+
+---
+
+## 12. Final Principles
+
+### ✅ Applied:
+
+* Clear service boundaries
+* Atomic transactions
+* Async messaging
+* Layered security
+* Observability
+
+### ❌ Avoided:
+
+* Kubernetes (overkill)
+* Separate auth service
+* Splitting wallet & transaction
+* Service mesh
+
+---
+
+
