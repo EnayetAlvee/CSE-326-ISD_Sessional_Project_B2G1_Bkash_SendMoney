@@ -8,6 +8,7 @@ import rateLimit from "express-rate-limit";
 import { supabase } from "./config/supabase.js";
 import config from "./config/index.js";
 import internalRoutes from "./routes/internal_routes.js";
+import walletRoutes from "./routes/wallet_routes.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use("/internal", internalRoutes);
+app.use("/api/wallet", walletRoutes);
 
 app.get("/health", async (req, res) => {
   try {

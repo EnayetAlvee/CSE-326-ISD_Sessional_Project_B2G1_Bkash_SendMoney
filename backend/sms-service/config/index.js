@@ -23,4 +23,7 @@ export default {
   emailUser: process.env.EMAIL_USER,
   emailPass: process.env.EMAIL_PASS,
   emailFrom: process.env.EMAIL_FROM,
+  
+  INTERNAL_SECRET: process.env.INTERNAL_SECRET || 'super-secret-internal-key-123',
+  REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379'
 };

@@ -67,8 +67,35 @@ const getMyWallet = async (req, res) => {
   }
 };
 
+const listMyTransactions = async (req, res) => {
+  try {
+    const userId = req.user?.id || req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    const limit = Number(req.query.limit || 20);
+    const offset = Number(req.query.offset || 0);
+
+    const transactions = await walletService.listTransactionsByUserId({
+      userId,
+      limit,
+      offset,
+    });
+
+    return res.status(200).json({
+      transactions,
+      pagination: { limit, offset },
+    });
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
+  }
+};
+
 export default {
   createInternalWallet,
   sendMoney,
   getMyWallet,
+  listMyTransactions,
 };

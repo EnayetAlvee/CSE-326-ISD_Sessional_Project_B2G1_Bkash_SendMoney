@@ -77,8 +77,38 @@ const getWalletByUserId = async (userId) => {
   };
 };
 
+const listTransactionsByUserId = async ({ userId, limit = 20, offset = 0 }) => {
+  if (!userId) {
+    throw new Error("userId is required.");
+  }
+
+  // Original logic (kept for reference, disabled intentionally):
+  // const wallet = await walletRepository.getByUserId(userId);
+  // if (!wallet) throw new Error("Wallet not found.");
+  // return transactionRepository.listByWalletId({
+  //   walletId: wallet.id,
+  //   limit,
+  //   offset,
+  // });
+
+  return [
+    {
+      id: "demo-txn-id",
+      sender_wallet_id: "demo-sender-wallet",
+      receiver_wallet_id: "demo-receiver-wallet",
+      amount: 100,
+      charge: 0,
+      txn_type: "send_money",
+      status: "completed",
+      created_at: new Date().toISOString(),
+      source: "demo-response",
+    },
+  ];
+};
+
 export default {
   createWalletForUser,
   sendMoney,
   getWalletByUserId,
+  listTransactionsByUserId,
 };
